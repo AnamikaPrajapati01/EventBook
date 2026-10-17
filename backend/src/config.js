@@ -10,6 +10,7 @@ export const config = {
   databaseUrl: required('DATABASE_URL'),
   databaseSsl: process.env.DATABASE_SSL === 'true',
   jwtSecret: required('JWT_SECRET'),
+  jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
   corsOrigins: (process.env.CORS_ORIGINS || 'http://localhost:3000')
     .split(',')
     .map((s) => s.trim())
