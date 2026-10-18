@@ -1,25 +1,34 @@
-
 import bcrypt from 'bcryptjs';
 import { pool, withTransaction } from './db.js';
 
 const reset = process.argv.includes('--reset');
 
+function required(name) {
+  const value = process.env[name];
+  if (!value) {
+    console.error(`Missing ${name}. Set it in backend/.env before seeding.`);
+    process.exit(1);
+  }
+  return value;
+}
+
 const admin = {
   name: 'Admin',
-  email: (process.env.SEED_ADMIN_EMAIL || 'admin@eventbook.test').toLowerCase(),
-  password: process.env.SEED_ADMIN_PASSWORD || 'Admin#12345',
+  email: required('SEED_ADMIN_EMAIL').toLowerCase(),
+  password: required('SEED_ADMIN_PASSWORD'),
   role: 'admin',
 };
 const testUser = {
   name: 'Test User',
-  email: (process.env.SEED_USER_EMAIL || 'user@eventbook.test').toLowerCase(),
-  password: process.env.SEED_USER_PASSWORD || 'User#12345',
+  email: required('SEED_USER_EMAIL').toLowerCase(),
+  password: required('SEED_USER_PASSWORD'),
   role: 'user',
 };
+const attendeePassword = required('SEED_ATTENDEE_PASSWORD');
 const attendees = ['Asha', 'Bikash', 'Chandra', 'Dipa', 'Eshan'].map((n) => ({
   name: n,
   email: `${n.toLowerCase()}@eventbook.test`,
-  password: 'Attendee#12345',
+  password: attendeePassword,
   role: 'user',
 }));
 
